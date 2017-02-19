@@ -29,17 +29,53 @@ public class UIObject : MonoBehaviour
             if (value)
             {
                 transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
+
+                //Hierarchy가 비활성화 되어있을때 활성화.
+                if (false == gameObject.activeInHierarchy)
+                {
+                    gameObject.SetActive(true);
+                }
             }
             //transform의 zPosition 값을 컬링되는 위치로 이동.
             else
             {
                 transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, INVISIBLE_ZPOS);
             }
-            
 
-            _isVisible = value;
-            
+            _isVisible = value;            
+
         }
+    }
+
+    /// <summary>
+    /// uGui용 트랜스폼.
+    /// </summary>
+    private  RectTransform _rectTrans = null;
+
+    protected virtual void Awake()
+    {
+        _rectTrans = GetComponent<RectTransform>();
+    }
+
+
+    /// <summary>
+    /// 앵커 설정.
+    /// </summary>
+    /// <param name="anchor"></param>
+    public void SetAnchor(Vector2 anchor)
+    {
+        _rectTrans.anchoredPosition = anchor;
+    }
+
+    /// <summary>
+    /// 앵커 최소, 최대값 설정.
+    /// </summary>
+    /// <param name="min"></param>
+    /// <param name="max"></param>
+    public void SetAnchor_MinMax(Vector2 min, Vector2 max)
+    {
+        _rectTrans.anchorMin = min;
+        _rectTrans.anchorMax = max;
     }
     
 

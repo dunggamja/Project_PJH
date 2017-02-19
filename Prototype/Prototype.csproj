@@ -66,8 +66,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\GameLogic\TestCode\TestCode.cs" />
     <Compile Include="Assets\Scripts\GameLogic\Turn\TurnManager.cs" />
     <Compile Include="Assets\Scripts\GameLogic\UI\UIForm.cs" />
+    <Compile Include="Assets\Scripts\GameLogic\UI\UIForm\UIFormTest.cs" />
     <Compile Include="Assets\Scripts\GameLogic\UI\UIFormManager.cs" />
     <Compile Include="Assets\Scripts\GameLogic\UI\UIObject.cs" />
   </ItemGroup>
