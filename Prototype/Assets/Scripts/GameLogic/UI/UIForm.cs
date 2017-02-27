@@ -8,16 +8,40 @@ using System.Collections;
 public class UIForm : UIObject
 {
     static public Vector2 CENTER_ANCHOR = new Vector2(0.5f, 0.5f);
-    
+
+    private bool _initialized = false;
+
+
     public virtual void Open()
     {
-        IsVisible = true;        
+        Initialize();
+
+        IsVisible = true;
+        SetDepthLast();
     }
 
 
     public virtual void Close()
     {
         IsVisible = false;
-    }   
+    }
 
+
+    /// <summary>
+    /// 현재 패널안에서 가장 마지막에 표시합니다. 
+    /// </summary>
+    public void SetDepthLast()
+    {
+        transform.SetAsLastSibling();
+    }
+
+
+
+    private void Initialize()
+    {
+        if (_initialized)
+            return;
+
+        _initialized = true;
+    }
 }

@@ -1,10 +1,16 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 
 
 //모든 UI객체들은 UIObject를 사용해야 함.
 public class UIObject : MonoBehaviour
 {
+    public enum Components
+    {
+
+    }
     /// <summary>
     /// UI 컬링을 위한 zPosition
     /// </summary>
@@ -52,9 +58,13 @@ public class UIObject : MonoBehaviour
     /// </summary>
     private  RectTransform _rectTrans = null;
 
+    private UI_BindAssist _bindAssist = null;
+
+
     protected virtual void Awake()
     {
         _rectTrans = GetComponent<RectTransform>();
+        _bindAssist = new UI_BindAssist(transform);
     }
 
 
@@ -77,6 +87,27 @@ public class UIObject : MonoBehaviour
         _rectTrans.anchorMin = min;
         _rectTrans.anchorMax = max;
     }
-    
+
+
+    public T GetControl<T>(int key) where T : MonoBehaviour
+    {
+        var obj = _bindAssist.GetBindObject(key);
+        if (null != obj)
+        {
+            T component = obj.GetComponent<T>();
+            if (null != component)
+                return component;
+        }
+        return null;
+    }
+
+    public void BindObject<T>() where T : struct, IConvertible
+    {
+        _bindAssist.Bind<T>();
+    }
+
+
+
+
 
 }

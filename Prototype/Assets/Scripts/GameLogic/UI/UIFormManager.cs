@@ -139,8 +139,34 @@ public class UIFormManager : MonoBehaviour
         //삭제.
         if (null != destroyUIForm)
         {
-            Destroy(destroyUIForm);
+            Destroy(destroyUIForm.gameObject);
         }
+    }
+
+
+    /// <summary>
+    /// 모든 UIForm을 닫습니다. 
+    /// </summary>
+    public void CloseAllUIForms()
+    {
+        for (int i = 0; i < _listUIForms.Count; ++i)
+            _listUIForms[i].Close();
+    }
+
+    /// <summary>
+    /// 모든 UIForm을 게임상에서 삭제합니다.
+    /// </summary>
+    public void DestroyAllUIForms()
+    {
+        var listDestroyUIForms = _listUIForms.FindAll((uiform) => { return true; });
+
+        for (int i = 0; i < listDestroyUIForms.Count; ++i)
+        {
+            listDestroyUIForms[i].Close();
+            Destroy(listDestroyUIForms[i].gameObject);
+        }
+
+        _listUIForms.RemoveAll( (uiform) => {  return true; });
     }
 
 }
