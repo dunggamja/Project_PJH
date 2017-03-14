@@ -63,8 +63,10 @@ public class UIObject : MonoBehaviour
 
     protected virtual void Awake()
     {
-        _rectTrans = GetComponent<RectTransform>();
-        _bindAssist = new UI_BindAssist(transform);
+        _rectTrans = GetComponent<RectTransform>();        
+        _bindAssist = GetComponent<UI_BindAssist>();
+        if (null == _bindAssist)
+            Debug.Log("bindAssist is null");
     }
 
 
@@ -88,8 +90,13 @@ public class UIObject : MonoBehaviour
         _rectTrans.anchorMax = max;
     }
 
-
-    public T GetControl<T>(int key) where T : MonoBehaviour
+    /// <summary>
+    /// 컨트롤을 얻어옵니다. 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public T GetControl<T>(string key) where T : Component
     {
         var obj = _bindAssist.GetBindObject(key);
         if (null != obj)
@@ -100,14 +107,4 @@ public class UIObject : MonoBehaviour
         }
         return null;
     }
-
-    public void BindObject<T>() where T : struct, IConvertible
-    {
-        _bindAssist.Bind<T>();
-    }
-
-
-
-
-
 }
