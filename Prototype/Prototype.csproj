@@ -70,6 +70,8 @@
     <Compile Include="Assets\Scripts\GameLogic\TestCode\TestCode.cs" />
     <Compile Include="Assets\Scripts\GameLogic\Turn\TurnManager.cs" />
     <Compile Include="Assets\Scripts\GameLogic\UI\Assist\UI_BindAssist.cs" />
+    <Compile Include="Assets\Scripts\GameLogic\UI\ScrollView\UI_GridController.cs" />
+    <Compile Include="Assets\Scripts\GameLogic\UI\ScrollView\UI_GridItem.cs" />
     <Compile Include="Assets\Scripts\GameLogic\UI\UIForm.cs" />
     <Compile Include="Assets\Scripts\GameLogic\UI\UIForm\CommandUIDlg.cs" />
     <Compile Include="Assets\Scripts\GameLogic\UI\UIForm\UIFormTest.cs" />

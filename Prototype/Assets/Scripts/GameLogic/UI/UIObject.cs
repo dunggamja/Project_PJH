@@ -98,13 +98,11 @@ public class UIObject : MonoBehaviour
     /// <returns></returns>
     public T GetControl<T>(string key) where T : Component
     {
-        var obj = _bindAssist.GetBindObject(key);
-        if (null != obj)
+        if (null == _bindAssist)
         {
-            T component = obj.GetComponent<T>();
-            if (null != component)
-                return component;
+            Debug.Log("bindAssist is null");
+            return null;
         }
-        return null;
+       return _bindAssist.GetControl<T>(key);
     }
 }

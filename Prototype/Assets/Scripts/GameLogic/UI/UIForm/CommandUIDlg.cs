@@ -12,7 +12,7 @@ public class CommandUIDlg : UIForm
     }
 
     #region override function
-    public override void Open()
+    public sealed override void Open()
     {
         base.Open();
 
