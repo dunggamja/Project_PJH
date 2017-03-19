@@ -60,6 +60,11 @@ public class UIObject : MonoBehaviour
 
     private UI_BindAssist _bindAssist = null;
 
+    public RectTransform RectTrans
+    {
+        get { return _rectTrans; }
+        set { _rectTrans = value; }
+    }
 
     protected virtual void Awake()
     {

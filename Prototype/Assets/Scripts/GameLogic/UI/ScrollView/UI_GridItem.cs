@@ -8,7 +8,13 @@ public class UI_GridItemData
 
 }
 
-public class UI_GridItem : MonoBehaviour
+public class UI_GridItem : UIObject
 {
-    public RectTransform _rectTransform = null;
+    [HideInInspector]
+    public int  _dataIdx = 0;
+
+    public void TestGridItem()
+    {
+        GetControl<UnityEngine.UI.Text>("Text").text = _dataIdx.ToString();
+    }
 }
