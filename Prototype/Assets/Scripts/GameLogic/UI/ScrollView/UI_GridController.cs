@@ -13,8 +13,13 @@ public class UI_GridController : MonoBehaviour
     public enum ScrollDirection
     {
         DOWN,
-        END,
+        RIGHT,
     }
+
+    /// <summary>
+    /// 그리드 아이템이 배치될 방향.
+    /// </summary>
+    public ScrollDirection _eScrollDir = ScrollDirection.DOWN;
 
     /// <summary>
     /// 스크롤 뷰 오브젝트
@@ -93,29 +98,10 @@ public class UI_GridController : MonoBehaviour
             _itemWidth = 1;
         if (_itemHeight <= 0)
             _itemHeight = 1;
-        if (_columnCnt <= 0)
-            _columnCnt = 1;
 
-        
-        //패널 사이즈에서 표시될 수 있는 그리드 아이템의 갯수를 체크.
-        _showColumnCnt = (int)(_scrollWidth / _itemWidth) + 1;
-        _showRowCnt    = (int)(_scrollHeight / _itemWidth) + 1;
 
-        //컬럼 카운트가 1개일 경우 예외처리.
-        if (1 == _columnCnt)
-            _showColumnCnt = 1;
-
-        //행 계산.
-        //int rowCnt = _listGridItemData.Count /_columnCnt;
-
-        _rowCnt = _listGridItemData.Count / _columnCnt;
-
-        //행 계산에 대한 예외처리
-        // - 예) 그리드 아이템 5개, 컬럼 갯수가 3개이면 
-        //       5 / 3 = 1 ,  5 % 3 = 2 이므로 
-        //       ++1,  2줄을 표시하게 됩니다.
-        if ((0 != (_listGridItemData.Count % _columnCnt) && 0 != _rowCnt))
-            ++_rowCnt;
+        //행, 렬 계산.
+        Calc_RowColumnCnt();
         
 
         // 스크롤 영역 사이즈 계산.
@@ -166,9 +152,15 @@ public class UI_GridController : MonoBehaviour
             }
         }
 
-
-        Refresh_GridItem(false, true);
         
+        Refresh_GridItem(false, true);
+
+
+        //원본 아이템은 안보이도록 처리해줍니다. 
+        var oriGridItem = _gridItem.GetComponent<UI_GridItem>();
+        if (null != oriGridItem)
+            oriGridItem.IsVisible = false;
+
     }
 
     private void onChangeScroll(Vector2 pos)
@@ -194,7 +186,7 @@ public class UI_GridController : MonoBehaviour
     [ContextMenu("TestGridItem")]
     public void TestCode()
     {
-        for(int i = 0; i < 10; ++i)
+        for(int i = 0; i < 700; ++i)
             _listGridItemData.Add(new UI_GridItemData());
 
         Create_GridItem();
@@ -204,7 +196,11 @@ public class UI_GridController : MonoBehaviour
     int _prevStartY_For_GridShow = 0;
 
     
-
+    /// <summary>
+    /// 스크롤 뷰안에 있는 그리드 아이템을 갱신합니다. 
+    /// </summary>
+    /// <param name="checkScrollPos">이전 위치와 현재 위치를 비교합니다.</param>
+    /// <param name="refreshAllItem">모든 아이템을 갱신 할것인지 변경된 아이템만 갱신할 것인지 체크합니다.</param>
     private void Refresh_GridItem( bool checkScrollPos = true,  bool refreshAllItem = false)
     {
         if (0 == _itemHeight || 0 == _itemWidth)
@@ -214,14 +210,16 @@ public class UI_GridController : MonoBehaviour
         int startX = -(int)(_transContent.anchoredPosition.x / _itemWidth);
         int startY = (int)(_transContent.anchoredPosition.y / _itemHeight);
 
-        if (startX < 0)
-            startX = 0;
-        if (startY < 0)
-            startY = 0;
         if (_columnCnt - _showColumnCnt < startX)
             startX = _columnCnt - _showColumnCnt;
         if (_rowCnt - _showRowCnt < startY)
             startY = _rowCnt - _showColumnCnt;
+
+        if (startX < 0)
+            startX = 0;
+        if (startY < 0)
+            startY = 0;
+        
 
         //변경점이 없으면 return;
         if (checkScrollPos)
@@ -255,7 +253,8 @@ public class UI_GridController : MonoBehaviour
         //갱신될 그리드아이템 객체들.
         List<UI_GridItem> listRefreshItem = new List<UI_GridItem>();
         
-        if (false == refreshAllItem)
+        //모든 아이템 갱신.
+        if (refreshAllItem)
         {
             listRefreshItem.AddRange(_listGridItem);
             
@@ -263,9 +262,10 @@ public class UI_GridController : MonoBehaviour
             for (int i = 0; i < showItemIdx.Count; ++i)
                 listRefreshItem[i]._dataIdx = showItemIdx[i];
         }
+        //변경되어야 할 아이템만 갱신.
         else
         {
-            // 그리드 아이템이 참조하는 데이터의 인덱스를 참조
+            // 그리드 아이템이 참조하는 데이터의 인덱스를 참조ㅜ
             //  - 현재 표시되어야 하는 데이터가 아닌 값을 참조한다면 갱신목록 리스트에 추가.
             for (int i = 0; i < _listGridItem.Count; ++i)
             {
@@ -284,6 +284,11 @@ public class UI_GridController : MonoBehaviour
             int y = listRefreshItem[i]._dataIdx / _columnCnt;
             listRefreshItem[i].RectTrans.anchoredPosition = new Vector2(x * _itemWidth + _startPosX, -y * _itemHeight + _startPosY);
             listRefreshItem[i].TestGridItem();
+
+            //1. 해당 아이템이 스크롤영역안에 있는지 체크.
+            //2. 데이터 INDEX 체크.
+            // - 2개의 조건이 모두 참일 경우에만 표시합니다.
+            listRefreshItem[i].IsVisible = CheckIdx_IsInDataList(listRefreshItem[i]._dataIdx);
         }
 
         _prevStartX_For_GridShow = startX;
@@ -291,11 +296,11 @@ public class UI_GridController : MonoBehaviour
     }
 
     /// <summary>
-    /// 해당 그리드 아이템이 스크롤 영역에 표시되고 있는지 체크합니다.
+    /// 해당 그리드 아이템의 INDEX가 데이터 리스트를 벗어나지 않는지 체크합니다. 
     /// </summary>
     /// <param name="idx"></param>
     /// <returns></returns>
-    private bool CheckIdx_IsInScorllRect(int idx)
+    private bool CheckIdx_IsInDataList(int idx)
     {
         if (0 == _itemHeight || 0 == _itemWidth)
             return false ;
@@ -303,24 +308,54 @@ public class UI_GridController : MonoBehaviour
         if (idx < 0 || _listGridItemData.Count <= idx)
             return false;
 
-        int startX = -(int)(_transContent.anchoredPosition.x / _itemWidth);
-        int startY = -(int)(_transContent.anchoredPosition.y / _itemHeight);
-
-        if (startX < 0)
-            startX = 0;
-        if (startY < 0)
-            startY = 0;
-        if (_columnCnt - _showColumnCnt < startX)
-            startX = _columnCnt - _showColumnCnt;
-        if (_rowCnt - _showRowCnt < startY)
-            startY = _rowCnt - _showColumnCnt;
-
-        int coordX = idx % _columnCnt;
-        int coordY = idx / _columnCnt;
-
-        if(coordX < startX || startX + _showColumnCnt <= coordX || coordY < startY || startY + _showRowCnt <= coordY)
-            return false;
-
         return true;
+    }
+
+    /// <summary>
+    /// 표시될 수 있는 그리드 아이템의 행, 렬 수를 체크합니다. 
+    /// </summary>
+    private void Calc_RowColumnCnt()
+    {
+        //공통로직.
+        if (_columnCnt <= 0)
+            _columnCnt = 1;
+
+        //패널 사이즈에서 표시될 수 있는 그리드 아이템의 갯수를 체크.
+        _showColumnCnt = (int)(_scrollWidth / _itemWidth) + 1;
+        _showRowCnt = (int)(_scrollHeight / _itemHeight) + 1;
+
+        //아이템이 배치될 방향에 따라 따로 처리
+        // 1. 아래로 배치
+        if (ScrollDirection.DOWN == _eScrollDir)
+        {
+            //컬럼 카운트가 1개일 경우 예외처리.
+            if (1 == _columnCnt)
+                _showColumnCnt = 1;
+
+            _rowCnt = _listGridItemData.Count / _columnCnt;
+
+            //행 계산에 대한 예외처리
+            // - 예) 그리드 아이템 5개, 컬럼 갯수가 3개이면 
+            //       5 / 3 = 1 ,  5 % 3 = 2 이므로 
+            //       ++1,  2줄을 표시하게 됩니다.
+            if ((0 != (_listGridItemData.Count % _columnCnt) && 0 != _rowCnt))
+                ++_rowCnt;
+        }
+        // 2. 오른쪽으로 배치
+        else if(ScrollDirection.RIGHT == _eScrollDir)
+        {
+            //로우 카운트가 1개일 경우 예외처리.
+            if (1 == _rowCnt)
+                _showRowCnt = 1;
+
+            _columnCnt = _listGridItemData.Count / _rowCnt;
+
+            //열 계산에 대한 예외처리
+            // - 예) 그리드 아이템 5개, 로우 갯수가 3개이면 
+            //       5 / 3 = 1 ,  5 % 3 = 2 이므로 
+            //       ++1,  2줄을 표시하게 됩니다.
+            if ((0 != (_listGridItemData.Count % _rowCnt) && 0 != _columnCnt))
+                ++_columnCnt;
+        }
     }
 }
