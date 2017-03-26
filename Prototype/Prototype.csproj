@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\GameLogic\UI\ScrollView\UI_GridItem.cs" />
     <Compile Include="Assets\Scripts\GameLogic\UI\UIForm.cs" />
     <Compile Include="Assets\Scripts\GameLogic\UI\UIForm\CommandUIDlg.cs" />
+    <Compile Include="Assets\Scripts\GameLogic\UI\UIForm\ScrollViewDlg.cs" />
     <Compile Include="Assets\Scripts\GameLogic\UI\UIForm\UIFormTest.cs" />
     <Compile Include="Assets\Scripts\GameLogic\UI\UIForm\UIFormTest2.cs" />
     <Compile Include="Assets\Scripts\GameLogic\UI\UIFormManager.cs" />
