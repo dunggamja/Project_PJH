@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Text;
 public class TestCode : MonoBehaviour {
 
     /// <summary>
@@ -42,5 +42,30 @@ public class TestCode : MonoBehaviour {
     public void TestOpnUIFormCommandUIDlg()
     {
         UIFormManager.Instance.OpenUIForm<CommandUIDlg>();
+    }
+
+
+    [ContextMenu("TestLoadData")]
+    public void TestLoadData()
+    {
+        //DataLoader.Instance.LoadTextFile("test.txt");
+        //string source = sr.ReadLine();
+        //int lineCnt = 0;
+        //while (null != source)
+        //{
+        //    string[] strSplit = source.Split('\t');
+        //    StringBuilder sb = new StringBuilder();
+        //    sb.AppendFormat("Line : {0}, ", lineCnt);
+
+        //    for (int i = 0; i < strSplit.Length; ++i)
+        //    {
+        //        sb.AppendFormat("t:{0} ", strSplit[i]);
+        //    }
+
+        //    Debug.Log(sb.ToString());
+
+        //    source = sr.ReadLine();
+        //}
+        
     }
 }

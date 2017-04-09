@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\DataTable\DataTable.cs" />
     <Compile Include="Assets\Scripts\GameLogic\GameMain.cs" />
     <Compile Include="Assets\Scripts\GameLogic\TestCode\TestCode.cs" />
     <Compile Include="Assets\Scripts\GameLogic\Turn\TurnManager.cs" />
@@ -79,6 +80,11 @@
     <Compile Include="Assets\Scripts\GameLogic\UI\UIForm\UIFormTest2.cs" />
     <Compile Include="Assets\Scripts\GameLogic\UI\UIFormManager.cs" />
     <Compile Include="Assets\Scripts\GameLogic\UI\UIObject.cs" />
+    <Compile Include="Assets\Scripts\Utilities\DataLoader\DataLoader.cs" />
+    <Compile Include="Assets\Scripts\Utilities\SpriteManager\SpriteManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Resources\Text\test.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
