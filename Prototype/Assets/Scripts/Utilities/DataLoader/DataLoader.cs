@@ -139,8 +139,24 @@ public class DataLoader
 
         string strLine = sr.ReadLine();
 
+        bool bFindStartTable = false;
         while(false == string.IsNullOrEmpty(strLine))
         {
+            
+            if (false == bFindStartTable)
+            {
+                // [Table] 키워드를 발견한 다음줄부터 
+                // 데이터들을 읽어 들인다. 
+                string tempCompare = strLine.ToLower();
+                if (tempCompare.Contains("[table]"))
+                {
+                    bFindStartTable = true;
+                    continue;
+                    
+                }
+            }
+            
+
             string[] strSplit = strLine.Split('\t');
             DataLoad tempData = new DataLoad();
 
@@ -173,6 +189,11 @@ public class DataLoader
             return _listTempLoadFile[idx];
 
         return null;
+    }
+
+    public void ClearTempData()
+    {
+        _listTempLoadFile.Clear();
     }
 
 }

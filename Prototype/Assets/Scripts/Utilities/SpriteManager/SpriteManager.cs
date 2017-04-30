@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Xml;
 
 
-
+[SerializeField]
 public class SpriteData
 {
     public int _Idx = 0;    
@@ -14,6 +14,7 @@ public class SpriteData
     public Image _Image = null;
 }
 
+[SerializeField]
 public class SpriteDataContainer
 {
     List<SpriteData> _listSprData = new List<SpriteData>();    
@@ -69,6 +70,8 @@ public class SpriteManager : MonoBehaviour
     }
 
     public Dictionary<int, SpriteDataContainer> _dicSpriteContainer = new Dictionary<int, SpriteDataContainer>();
+
+
 
 
 }
