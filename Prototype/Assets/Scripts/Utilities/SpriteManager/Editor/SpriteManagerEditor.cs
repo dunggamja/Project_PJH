@@ -12,7 +12,7 @@ public class SpriteManagerEditor : Editor
     [SerializeField]
     public class SpriteManager_DicInfo
     {
-        public int _key = 0;
+        public string _key = string.Empty;
         public SpriteDataContainer _value = null;
     }
 
@@ -26,8 +26,9 @@ public class SpriteManagerEditor : Editor
     public SpriteManager _spriteManager = null;
 
 
-    private bool _IsShowSpriteList = true;
+    private bool _IsShowSpriteEdit = true;
     private bool _IsShowPreview = true;
+    private bool _IsShowSpriteList = true;
 
     private Sprite _sprPreview = null;
     private Texture2D _texPreview = null;
@@ -114,12 +115,15 @@ public class SpriteManagerEditor : Editor
 
         serializedObject.Update();
 
-
+        if (GUILayout.Button("Editor"))
+        {
+            SpriteEditorWindow.Open();
+        }
         
         //스프라이트 편집창 표시 ON /OFF
-        _IsShowSpriteList = EditorGUILayout.Foldout(_IsShowSpriteList, "SpriteList");
+        _IsShowSpriteEdit = EditorGUILayout.Foldout(_IsShowSpriteEdit, "Sprite Edit");
         //스프라이트 편집창 표시 ON /OFF
-        if (_IsShowSpriteList)
+        if (_IsShowSpriteEdit)
         {
             ShowInspector_SpriteList();
         }
@@ -170,15 +174,21 @@ public class SpriteManagerEditor : Editor
             _sprPreview = null;
         }
 
-        for (int idx = 0; idx < _listSprite._listSprData.Count; ++idx)
-        {
-            if (null == _listSprite._listSprData[idx])
-                continue;
+        _IsShowSpriteList = EditorGUILayout.Foldout(_IsShowSpriteList, "Sprite List");
 
-            EditorGUILayout.BeginHorizontal();
-            _listSprite._listSprData[idx]._Image = EditorGUILayout.ObjectField(_listSprite._listSprData[idx]._Image, typeof(Sprite), true) as Sprite;
-            EditorGUILayout.EndHorizontal();
+        if (_IsShowSpriteList)
+        {
+            for (int idx = 0; idx < _listSprite._listSprData.Count; ++idx)
+            {
+                if (null == _listSprite._listSprData[idx])
+                    continue;
+
+                EditorGUILayout.BeginHorizontal();
+                _listSprite._listSprData[idx]._Image = EditorGUILayout.ObjectField(_listSprite._listSprData[idx]._Image, typeof(Sprite), true) as Sprite;
+                EditorGUILayout.EndHorizontal();
+            }
         }
+        
     }
 
 
@@ -193,14 +203,48 @@ public class SpriteManagerEditor : Editor
             GUILayout.MaxWidth(200)
         };
 
-
+        EditorGUILayout.BeginHorizontal();
         
         EditorGUILayout.BeginVertical();
         EditorGUILayout.LabelField("", previewOptions);
         var lastRect = GUILayoutUtility.GetLastRect();
         _rectPreview = new Rect(0, lastRect.yMin + 5, 180, 180);
-        EditorGUILayout.EndVertical();
         Draw_Preview();
+        EditorGUILayout.EndVertical();
+
+
+        EditorGUILayout.BeginVertical();
+        //애니메이션 배속
+        EditorGUILayout.BeginHorizontal();
+        _listSprite._Speed = EditorGUILayout.FloatField("Speed : ", _listSprite._Speed);
+        
+        EditorGUILayout.EndHorizontal();
+
+
+        //총 재생시간
+        EditorGUILayout.BeginHorizontal();
+        _listSprite._Time = EditorGUILayout.FloatField("Play Time : ", _listSprite._Time);
+        
+        EditorGUILayout.EndHorizontal();
+        
+        //프레임당 시간(평균)
+        EditorGUILayout.BeginHorizontal();
+        _listSprite._TimeGap = EditorGUILayout.FloatField("TimeGap : ", _listSprite._TimeGap);
+        
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("R"))
+        { }
+        if (GUILayout.Button("R"))
+        { }
+        if (GUILayout.Button("R"))
+        { }
+        EditorGUILayout.EndHorizontal();
+
+
+        EditorGUILayout.EndVertical();
+        EditorGUILayout.EndHorizontal();
     }
 
     private void Draw_Preview()

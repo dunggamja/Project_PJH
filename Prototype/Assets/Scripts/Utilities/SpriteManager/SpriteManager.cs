@@ -6,22 +6,21 @@ using System.Collections.Generic;
 using System.Xml;
 
 
-[SerializeField]
+[Serializable]
 public class SpriteData
 {
-    public int _Idx = 0;            //인덱스
-    public float _Time_Frame = 0f;  //보여질 시간.
-    public Sprite _Image = null;    //스프라이트
+    [SerializeField] public int _Idx = 0;            //인덱스
+    [SerializeField] public float _Time_Frame = 0f;  //보여질 시간.
+    [SerializeField] public Sprite _Image = null;    //스프라이트
 }
 
-[SerializeField]
+[Serializable]
 public class SpriteDataContainer
 {
-
-    public List<SpriteData> _listSprData = new List<SpriteData>();    
-    public float _Speed = 1f;       //배속
-    public float _Time = 0f;        //애니메이션 시간.
-    public float _TimeGap = 1f;   //시간간격
+    [SerializeField] public List<SpriteData> _listSprData = new List<SpriteData>();    
+    [SerializeField] public float _Speed = 1f;       //배속
+    [SerializeField] public float _Time = 0f;        //애니메이션 시간.
+    [SerializeField] public float _TimeGap = 1f;   //시간간격
     
     public void AddData(Sprite spr)
     {
@@ -137,8 +136,7 @@ public class SpriteManager : MonoBehaviour
         }
     }
 
-    public Dictionary<int, SpriteDataContainer> _dicSpriteContainer = new Dictionary<int, SpriteDataContainer>();
-
+    public Dictionary<string, SpriteDataContainer> _dicSpriteContainer = new Dictionary<string, SpriteDataContainer>();
 
 
 }
